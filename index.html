@@ -5,48 +5,164 @@
 <title>Atomic Structure Quiz</title>
 <style>
 body{font-family:Arial;background:#f2f2f2;text-align:center}
-.box{background:#fff;width:600px;margin:30px auto;padding:20px;border-radius:10px}
-button{width:100%;margin:5px 0;padding:10px;font-size:16px}
-.correct{background:#4CAF50;color:#fff}
-.wrong{background:#f44336;color:#fff}
+.box{background:#fff;width:700px;margin:30px auto;padding:20px;border-radius:10px}
+button{width:100%;margin:6px 0;padding:10px;font-size:16px;cursor:pointer}
+.correct{background:#4CAF50;color:white}
+.wrong{background:#f44336;color:white}
+.hidden{display:none}
+.result{font-size:18px;line-height:1.6}
 </style>
 </head>
 <body>
 
-<div class="box">
+<!-- START -->
+<div class="box" id="startBox">
+<h2>Enter your name</h2>
+<input id="studentName" placeholder="Student name" style="padding:8px;width:80%">
+<br><br>
+<button onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<!-- QUIZ -->
+<div class="box hidden" id="quizBox">
 <h2 id="question"></h2>
 <div id="answers"></div>
-<p id="score">Score: 0</p>
+<p id="progress"></p>
+</div>
+
+<!-- RESULT -->
+<div class="box hidden" id="resultBox">
+<h2>RESULT</h2>
+<div class="result" id="finalResult"></div>
+<button onclick="location.reload()">Do again</button>
 </div>
 
 <script>
-const quiz = [
- {q:"The particles that make up the nucleus of most atoms are", a:["electrons and protons","protons and neutrons","neutrons and electrons","electrons, protons and neutrons"], c:1},
- {q:"Which particle has negligible mass compared to others?", a:["proton","neutron","electron","neutron and electron"], c:2},
- {q:"An atom is electrically neutral because", a:["uncharged particles","protons = electrons","electrons = neutrons","neutrons = protons"], c:1},
- {q:"The symbol for an electron is", a:["e","p","n","q"], c:0},
- {q:"The electric charge of a proton is", a:["+1","-1","0","+2"], c:0}
+let student="";
+let index=0;
+let correct=0;
+
+const quiz=[
+{q:"The particles that make up the nucleus of most atoms are",
+ a:["electrons and protons","protons and neutrons","neutrons and electrons","electrons, protons and neutrons"],c:1},
+
+{q:"The particles that make up most atoms are",
+ a:["electrons and protons","protons and neutrons","neutrons and electrons","electrons, protons and neutrons"],c:3},
+
+{q:"An atom contains charged particles which are",
+ a:["protons and alpha particles","protons and neutrons","protons and electrons","electrons and neutrons"],c:2},
+
+{q:"The charged particle in the nucleus of most atoms is",
+ a:["electron","proton","neutron","neutron and electron"],c:1},
+
+{q:"Which particle has negligible mass compared to others?",
+ a:["proton","neutron","electron","neutron and electron"],c:2},
+
+{q:"Which statement is always correct in an atom?",
+ a:["protons = neutrons","electrons = neutrons","electrons = protons","electrons = protons + neutrons"],c:2},
+
+{q:"An atom is electrically neutral because",
+ a:["it has uncharged particles","protons = electrons","electrons = neutrons","neutrons = protons"],c:1},
+
+{q:"Nitrogen has 7 electrons. The number of protons is",
+ a:["14","7","8","10"],c:1},
+
+{q:"An aluminum atom (13 protons) has how many electrons?",
+ a:["10","11","12","13"],c:3},
+
+{q:"An oxygen atom has 8 electrons. Its nuclear charge is",
+ a:["-8","+8","-16","+16"],c:1},
+
+{q:"Number of charged particles in a nitrogen atom is",
+ a:["14","7","8","10"],c:0},
+
+{q:"If the nucleus is magnified to 12 cm, atomic diameter is",
+ a:["200 m","600 m","300 m","1200 m"],c:3},
+
+{q:"Atomic diameter is approximately how many times larger than nuclear diameter?",
+ a:["10","100","1000","10000"],c:3},
+
+{q:"Symbol of proton is",
+ a:["e","p","n","q"],c:1},
+
+{q:"Symbol of electron is",
+ a:["e","p","n","q"],c:0},
+
+{q:"Symbol of neutron is",
+ a:["e","p","n","q"],c:2},
+
+{q:"Electric charge of a proton is",
+ a:["+1","-1","0","+2"],c:0},
+
+{q:"Electric charge of an electron is",
+ a:["+1","-1","0","+2"],c:1},
+
+/* TRUE – FALSE */
+{q:"TRUE or FALSE: The atomic nucleus always has a positive charge.",
+ a:["True","False"],c:0},
+
+{q:"TRUE or FALSE: In a neutral atom, protons equal electrons.",
+ a:["True","False"],c:0},
+
+{q:"TRUE or FALSE: Atomic mass is mainly concentrated in the electron shell.",
+ a:["True","False"],c:1},
+
+{q:"TRUE or FALSE: A neutral atom is much larger than its nucleus but has nearly the same mass.",
+ a:["True","False"],c:0},
 ];
 
-let i=0, score=0;
+function startQuiz(){
+ student=document.getElementById("studentName").value.trim();
+ if(student===""){alert("Please enter your name");return;}
+ document.getElementById("startBox").classList.add("hidden");
+ document.getElementById("quizBox").classList.remove("hidden");
+ load();
+}
 
 function load(){
- document.getElementById("question").innerText=quiz[i].q;
+ document.getElementById("question").innerText=(index+1)+"/"+quiz.length+": "+quiz[index].q;
  let html="";
- quiz[i].a.forEach((x,idx)=>{
-  html+=`<button onclick="check(${idx})">${x}</button>`;
+ quiz[index].a.forEach((x,i)=>{
+  html+=`<button onclick="check(${i})">${x}</button>`;
  });
  document.getElementById("answers").innerHTML=html;
+ document.getElementById("progress").innerText=
+  "Correct: "+correct+" / "+quiz.length;
 }
 
-function check(x){
- let btns=document.querySelectorAll("button");
- if(x===quiz[i].c){btns[x].classList.add("correct");score++;}
- else{btns[x].classList.add("wrong");}
- document.getElementById("score").innerText="Score: "+score;
- setTimeout(()=>{i++; if(i<quiz.length) load(); else alert("Finished! Score: "+score);},800);
+function check(i){
+ let btns=document.querySelectorAll("#answers button");
+ btns.forEach(b=>b.disabled=true);
+
+ if(i===quiz[index].c){
+   btns[i].classList.add("correct");
+   correct++;
+ }else{
+   btns[i].classList.add("wrong");
+   btns[quiz[index].c].classList.add("correct");
+ }
+
+ setTimeout(()=>{
+  index++;
+  if(index<quiz.length){
+    load();
+  }else{
+    showResult();
+  }
+ },900);
 }
-load();
+
+function showResult(){
+ document.getElementById("quizBox").classList.add("hidden");
+ document.getElementById("resultBox").classList.remove("hidden");
+
+ let score10 = (correct/quiz.length*10).toFixed(2);
+
+ document.getElementById("finalResult").innerHTML=
+  "Student name: <b>"+student+"</b><br>"+
+  "Correct answers: <b>"+correct+" / "+quiz.length+"</b><br>"+
+  "Final score (scale 10): <b>"+score10+"</b>";
+}
 </script>
 
 </body>
