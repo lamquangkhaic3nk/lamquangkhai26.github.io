@@ -1,66 +1,53 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Game trắc nghiệm</title>
+<title>Atomic Structure Quiz</title>
 <style>
-body { font-family: Arial; padding: 20px; }
-button { display: block; margin: 8px 0; padding: 10px; width: 300px; }
+body{font-family:Arial;background:#f2f2f2;text-align:center}
+.box{background:#fff;width:600px;margin:30px auto;padding:20px;border-radius:10px}
+button{width:100%;margin:5px 0;padding:10px;font-size:16px}
+.correct{background:#4CAF50;color:#fff}
+.wrong{background:#f44336;color:#fff}
 </style>
 </head>
-
 <body>
 
+<div class="box">
 <h2 id="question"></h2>
-
-<button onclick="checkAnswer(0)" id="a"></button>
-<button onclick="checkAnswer(1)" id="b"></button>
-<button onclick="checkAnswer(2)" id="c"></button>
-<button onclick="checkAnswer(3)" id="d"></button>
-
-<p id="result"></p>
+<div id="answers"></div>
+<p id="score">Score: 0</p>
+</div>
 
 <script>
-const questions = [
-  {
-    q: "Nguyên tử gồm những hạt nào?",
-    answers: [
-      "Electron, proton, neutron",
-      "Electron và proton",
-      "Proton và neutron",
-      "Electron và neutron"
-    ],
-    correct: 0
-  }
+const quiz = [
+ {q:"The particles that make up the nucleus of most atoms are", a:["electrons and protons","protons and neutrons","neutrons and electrons","electrons, protons and neutrons"], c:1},
+ {q:"Which particle has negligible mass compared to others?", a:["proton","neutron","electron","neutron and electron"], c:2},
+ {q:"An atom is electrically neutral because", a:["uncharged particles","protons = electrons","electrons = neutrons","neutrons = protons"], c:1},
+ {q:"The symbol for an electron is", a:["e","p","n","q"], c:0},
+ {q:"The electric charge of a proton is", a:["+1","-1","0","+2"], c:0}
 ];
 
-function loadQuestion() {
-  document.getElementById("question").innerText = questions[0].q;
-  document.getElementById("a").innerText = "A. " + questions[0].answers[0];
-  document.getElementById("b").innerText = "B. " + questions[0].answers[1];
-  document.getElementById("c").innerText = "C. " + questions[0].answers[2];
-  document.getElementById("d").innerText = "D. " + questions[0].answers[3];
+let i=0, score=0;
+
+function load(){
+ document.getElementById("question").innerText=quiz[i].q;
+ let html="";
+ quiz[i].a.forEach((x,idx)=>{
+  html+=`<button onclick="check(${idx})">${x}</button>`;
+ });
+ document.getElementById("answers").innerHTML=html;
 }
 
-function checkAnswer(i) {
-  document.getElementById("result").innerText =
-    i === questions[0].correct ? "✅ Đúng rồi!" : "❌ Sai rồi!";
+function check(x){
+ let btns=document.querySelectorAll("button");
+ if(x===quiz[i].c){btns[x].classList.add("correct");score++;}
+ else{btns[x].classList.add("wrong");}
+ document.getElementById("score").innerText="Score: "+score;
+ setTimeout(()=>{i++; if(i<quiz.length) load(); else alert("Finished! Score: "+score);},800);
 }
-
-loadQuestion();
+load();
 </script>
 
 </body>
 </html>
-<script>
-  function checkAnswer(answer) {
-    const result = document.getElementById("result");
-    if (answer === "A") {
-      result.innerHTML = "✅ Đúng rồi!";
-      result.style.color = "green";
-    } else {
-      result.innerHTML = "❌ Sai rồi!";
-      result.style.color = "red";
-    }
-  }
-</script>
