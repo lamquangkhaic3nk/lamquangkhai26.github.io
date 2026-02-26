@@ -52,3 +52,15 @@ loadQuestion();
 
 </body>
 </html>
+<script>
+  function checkAnswer(answer) {
+    const result = document.getElementById("result");
+    if (answer === "A") {
+      result.innerHTML = "✅ Đúng rồi!";
+      result.style.color = "green";
+    } else {
+      result.innerHTML = "❌ Sai rồi!";
+      result.style.color = "red";
+    }
+  }
+</script>
