@@ -1,11 +1,54 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Game kiểm tra bài cũ</title>
+<meta charset="UTF-8">
+<title>Game trắc nghiệm</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+button { display: block; margin: 8px 0; padding: 10px; width: 300px; }
+</style>
 </head>
+
 <body>
-  <h1>Game trắc nghiệm</h1>
-  <p>Trang web đã hoạt động.</p>
+
+<h2 id="question"></h2>
+
+<button onclick="checkAnswer(0)" id="a"></button>
+<button onclick="checkAnswer(1)" id="b"></button>
+<button onclick="checkAnswer(2)" id="c"></button>
+<button onclick="checkAnswer(3)" id="d"></button>
+
+<p id="result"></p>
+
+<script>
+const questions = [
+  {
+    q: "Nguyên tử gồm những hạt nào?",
+    answers: [
+      "Electron, proton, neutron",
+      "Electron và proton",
+      "Proton và neutron",
+      "Electron và neutron"
+    ],
+    correct: 0
+  }
+];
+
+function loadQuestion() {
+  document.getElementById("question").innerText = questions[0].q;
+  document.getElementById("a").innerText = "A. " + questions[0].answers[0];
+  document.getElementById("b").innerText = "B. " + questions[0].answers[1];
+  document.getElementById("c").innerText = "C. " + questions[0].answers[2];
+  document.getElementById("d").innerText = "D. " + questions[0].answers[3];
+}
+
+function checkAnswer(i) {
+  document.getElementById("result").innerText =
+    i === questions[0].correct ? "✅ Đúng rồi!" : "❌ Sai rồi!";
+}
+
+loadQuestion();
+</script>
+
 </body>
 </html>
