@@ -1,92 +1,192 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Flappy Bird Học Tập</title>
+<title>Atomic Structure Quiz</title>
+
 <style>
-body { margin:0; text-align:center; background:#70c5ce; font-family:Arial }
-canvas { display:block; margin:auto; background:#70c5ce }
-#box {
-  display:none;
-  position:fixed;
-  top:30%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  width:320px;
+body{
+  font-family: Arial, sans-serif;
+  background:#eef2f7;
+  font-size:20px;
 }
-button { display:block; width:100%; margin:6px 0; }
+.container{
+  max-width:1100px;
+  background:#fff;
+  margin:auto;
+  padding:30px;
+  border-radius:12px;
+}
+h1,h2{
+  text-align:center;
+}
+input[type=text]{
+  font-size:20px;
+  padding:10px;
+  width:100%;
+  margin-bottom:15px;
+}
+.question{
+  margin:25px 0;
+}
+button{
+  font-size:22px;
+  padding:12px 30px;
+  margin-top:20px;
+  cursor:pointer;
+}
+.result{
+  font-size:26px;
+  font-weight:bold;
+  color:green;
+  text-align:center;
+  margin-top:30px;
+}
 </style>
 </head>
 
 <body>
-<h3>🐦 Flappy Bird Hóa 10</h3>
-<canvas id="game" width="320" height="480"></canvas>
+<div class="container">
 
-<div id="box">
-  <p id="q"></p>
-  <button onclick="choose(0)"></button>
-  <button onclick="choose(1)"></button>
-  <button onclick="choose(2)"></button>
-  <button onclick="choose(3)"></button>
+<h1>ATOMIC STRUCTURE QUIZ</h1>
+
+<label>Student Name:</label>
+<input type="text" id="studentName">
+
+<label>Class:</label>
+<input type="text" id="studentClass">
+
+<form id="quiz">
+
+<h2>PART 1 – MULTIPLE CHOICE</h2>
+
+<script>
+const mcQuestions = [
+["The particles that make up the nucleus of most atoms are?",
+["electrons and protons","protons and neutrons","neutrons and electrons","electrons, protons and neutrons"],1],
+
+["An atom contains charged particles which are?",
+["protons and alpha particles","protons and neutrons","protons and electrons","electrons and neutrons"],2],
+
+["The charged particle in the nucleus is?",
+["Electron","Proton","Neutron","Neutron and electron"],1],
+
+["Which particle has negligible mass?",
+["Proton","Neutron","Electron","Neutron and electron"],2],
+
+["In an atom, which statement is always correct?",
+["p = n","e = n","e = p","e = p + n"],2],
+
+["An atom is neutral because?",
+["neutral particles","p = e","e = n","p = n"],1],
+
+["Nitrogen has 7 electrons. Protons = ?",
+["14","7","8","10"],1],
+
+["Aluminium has 13 protons. Electrons = ?",
+["10","11","12","13"],3],
+
+["Oxygen has 8 electrons. Nuclear charge = ?",
+["-8","+8","-16","+16"],1],
+
+["Charged particles in nitrogen atom = ?",
+["14","7","8","10"],0],
+
+["If nucleus is 12 cm, atom diameter = ?",
+["200 m","600 m","300 m","1200 m"],3],
+
+["Atom is larger than nucleus by?",
+["10","100","1000","10000"],3],
+
+["Symbol of proton?",
+["e","p","n","q"],1],
+
+["Symbol of electron?",
+["e","p","n","q"],0],
+
+["Symbol of neutron?",
+["e","p","n","q"],2],
+
+["Charge of proton?",
+["+1","-1","0","+2"],0],
+
+["Charge of electron?",
+["+1","-1","0","+2"],1],
+
+["Electron mass is?",
+["large","medium","small","negligible"],3]
+];
+
+mcQuestions.forEach((q,i)=>{
+  document.write(`<div class="question"><p>${i+1}. ${q[0]}</p>`);
+  q[1].forEach((a,j)=>{
+    document.write(`<label><input type="radio" name="mc${i}" value="${j}"> ${a}</label><br>`);
+  });
+  document.write("</div>");
+});
+</script>
+
+<h2>PART 2 – TRUE / FALSE</h2>
+
+<script>
+const tfQuestions = [
+["The atomic nucleus is positively charged.",true],
+["Protons equal electrons in neutral atoms.",true],
+["Atomic mass is mainly in electron shell.",false],
+["p = n = e in all atoms.",false],
+["Proton mass = 1.673×10⁻²⁴ g.",true],
+["Neutron mass = 1.675×10⁻²⁴ g.",true],
+["Electron mass = 9.11×10⁻²⁸ g.",true],
+["Neutron mass = 1.673×10⁻²⁴ g.",false],
+["1 amu = 1.66×10⁻²⁴ g.",true],
+["1 nm = 10⁻⁹ m.",true],
+["1 Å = 10⁻¹⁰ m.",true],
+["10 nm = 1 Å.",false],
+["Proton is positive, in nucleus.",true],
+["Electron is in nucleus.",false],
+["Electron mass is negligible.",true],
+["Atom size >> nucleus, mass ≈ nucleus.",true]
+];
+
+tfQuestions.forEach((q,i)=>{
+  document.write(`<div class="question"><p>${i+1}. ${q[0]}</p>
+  <label><input type="radio" name="tf${i}" value="true"> True</label>
+  <label><input type="radio" name="tf${i}" value="false"> False</label>
+  </div>`);
+});
+</script>
+
+<button type="button" onclick="submitQuiz()">SUBMIT</button>
+
+</form>
+
+<div class="result" id="result"></div>
+
 </div>
 
 <script>
-const c = document.getElementById("game");
-const ctx = c.getContext("2d");
+function submitQuiz(){
+  let score = 0;
 
-let y = 200, v = 0, g = 0.6;
-let score = 0, stop = false;
+  mcQuestions.forEach((q,i)=>{
+    let ans = document.querySelector(`input[name="mc${i}"]:checked`);
+    if(ans && parseInt(ans.value) === q[2]) score++;
+  });
 
-const qs = [
- {
-  q:"Công thức tính số mol là?",
-  o:["n = m/M","n = V/24,79","n = Cm/V","n = PV/RT"],
-  a:0
- },
- {
-  q:"Công thức n = PV/RT dùng cho?",
-  o:["Chất rắn","Dung dịch","Chất khí","Dung môi"],
-  a:2
- }
-];
-let i = 0;
+  tfQuestions.forEach((q,i)=>{
+    let ans = document.querySelector(`input[name="tf${i}"]:checked`);
+    if(ans && (ans.value === q[1].toString())) score++;
+  });
 
-document.addEventListener("click",()=>{ if(!stop) v=-8; });
+  let total = mcQuestions.length + tfQuestions.length;
+  let finalScore = Math.round(score/total*10);
 
-function draw(){
- ctx.clearRect(0,0,320,480);
- v+=g; y+=v;
- ctx.beginPath(); ctx.arc(50,y,12,0,7); ctx.fillStyle="yellow"; ctx.fill();
- ctx.fillStyle="black"; ctx.fillText("Điểm: "+score,10,20);
- if(y>480){ stop=true; showQ(); return; }
- requestAnimationFrame(draw);
+  document.getElementById("result").innerHTML =
+  `Student: <b>${studentName.value}</b> | Class: <b>${studentClass.value}</b><br>
+   Correct: ${score}/${total}<br>
+   Final Score: <b>${finalScore}/10</b>`;
 }
-
-function showQ(){
- const b=document.getElementById("box");
- b.style.display="block";
- document.getElementById("q").innerText=qs[i].q;
- b.querySelectorAll("button").forEach((btn,j)=>{
-   btn.innerText=qs[i].o[j];
- });
-}
-
-function choose(x){
- if(x===qs[i].a){
-   score++; i=(i+1)%qs.length;
-   y=200; v=0; stop=false;
-   document.getElementById("box").style.display="none";
-   draw();
- } else {
-   alert("❌ Sai! Điểm: "+score);
-   location.reload();
- }
-}
-
-draw();
 </script>
+
 </body>
 </html>
